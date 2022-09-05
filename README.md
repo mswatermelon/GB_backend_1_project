@@ -1,2 +1,2 @@
-# GB_backend_1_project
-Homeworks from this course will be here
+# GB_backend_1
+The goal of this course is implementation of URL shortener

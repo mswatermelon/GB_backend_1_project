@@ -2,7 +2,7 @@
 My own iplementation of URL shortener
 
 ### Dependencies:
-* Go 1.19
+* Go 1.18
 * GORM
 * SQLite
 * Chi

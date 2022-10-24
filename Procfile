@@ -1,1 +1,1 @@
-web: bin/url_shortener
+web: ./bin/GB_backend_1_project

@@ -1,0 +1,122 @@
+openapi: 3.0.1
+info:
+  title: URL shortener specification
+  version: 1.0.0
+components:
+  schemas:
+    Hash:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint
+        hash:
+          type: string
+        url:
+          type: string
+        created_at:
+          type: string
+          format: datetime
+        deleted_at:
+          type: string
+          format: datetime
+    Hits:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint
+        hash_id:
+          type: integer
+          format: uint
+        ip:
+          type: string
+        access_at:
+          type: string
+          format: datetime
+    UrlSource:
+      type: object
+      properties:
+        url:
+          type: string
+    ResultUrl:
+      type: object
+      properties:
+        short_url:
+          type: string
+    Stats:
+      type: object
+      properties:
+        url:
+          type: string
+        access:
+          type: array
+          items:
+            type: object
+            properties:
+              /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}$/:
+                type: string
+                format: timestamp
+                description: ip and time when was a try to access the short url
+
+
+paths:
+  /:
+    summary: "Welcome to the service"
+  /{hash}:
+    get:
+      summary: Redirect to full URL by hash
+      responses:
+        302:
+          description: redirect
+        404:
+          description: Not found
+  /v1/hash:
+    post:
+      summary: "Generate a new short URL for source"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Source with URL from which a new short url will be created"
+          required: true
+          schema:
+            $ref: "#/components/schemas/UrlSource"
+      responses:
+        201:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResultUrl"
+        400:
+          description: "Bad request"
+    /{hash}
+      delete:
+        responses:
+          204:
+            description: successful delete
+      /stats
+        get:
+          summary: List URL visits by short analog
+          parameters:
+            - name: since
+              in: query
+              description: Filter which allows to get list since some moment
+              required: false
+              schema:
+                type: string
+                format: timestamp
+          responses:
+            200:
+              description: successful operation
+              content:
+                application/json:
+                  schema:
+                    items:
+                      $ref: '#/components/schemas/Stats'
+            400:
+              description: Invalid filter
